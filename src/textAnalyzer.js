@@ -3,39 +3,29 @@ const fs = require('fs');
 
 function countWords(filePath) {
     const text = fs.readFileSync(filePath, 'utf8');
-    const words = text.match(/\b[\w']+\b/g);
-    return words ? words.length : 0;
+    const words = text.match(/\b[\w']+\b/g) || [];
+    return words.length;
 }
 
 function findLongestWord(filePath) {
     const text = fs.readFileSync(filePath, 'utf8');
     const words = text.match(/\b[\w']+\b/g) || [];
 
-    let longestWord = '';
+    let longest = '';
 
-    for (const word of words) {
-        if (word.length > longestWord.length) {
-            longestWord = word;
+    for (let word of words) {
+        if (word.length > longest.length) {
+            longest = word;
         }
     }
 
-    return longestWord;
+    return longest;
 }
 
 function countLines(filePath) {
-    const text = fs.readFileSync(filePath, 'utf8');
-
-    if (text.length === 0) {
-        return 0;
-    }
-
-    return text.replace(/\r\n/g, '\n')
-               .replace(/\n$/, '')
-               .split('\n').length;
+    const text = fs.readFileSync(filePath, 'utf8').trimEnd();
+    return text ? text.split(/\r?\n/).length : 0;
 }
 
-module.exports = {
-    countWords,
-    findLongestWord,
-    countLines
-};
+module.exports = { countWords, findLongestWord, countLines };
+

@@ -1,6 +1,5 @@
 
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 
 const {
@@ -10,31 +9,23 @@ const {
     calculateAverage
 } = require('../src/numberProcessor');
 
-let tempDir;
-let filePath;
+const file = path.join(__dirname, 'temp-numbers.txt');
 
-beforeAll(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'number-test-'));
-    filePath = path.join(tempDir, 'numbers.txt');
-    fs.writeFileSync(filePath, '10\n20\n-5\n15');
+beforeAll(() => fs.writeFileSync(file, '10\n20\n-5\n15'));
+afterAll(() => fs.unlinkSync(file));
+
+test('calculates sum', () => {
+    expect(calculateSum(file)).toBe(40);
 });
 
-afterAll(() => {
-    fs.rmSync(tempDir, { recursive: true, force: true });
+test('finds highest number', () => {
+    expect(findHighest(file)).toBe(20);
 });
 
-test('calculates the sum of all numbers', () => {
-    expect(calculateSum(filePath)).toBe(40);
+test('finds lowest number', () => {
+    expect(findLowest(file)).toBe(-5);
 });
 
-test('finds the highest number', () => {
-    expect(findHighest(filePath)).toBe(20);
-});
-
-test('finds the lowest number', () => {
-    expect(findLowest(filePath)).toBe(-5);
-});
-
-test('calculates the average', () => {
-    expect(calculateAverage(filePath)).toBe(10);
+test('calculates average', () => {
+    expect(calculateAverage(file)).toBe(10);
 });

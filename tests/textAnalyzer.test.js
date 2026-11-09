@@ -1,4 +1,5 @@
 
+const fs = require('fs');
 const path = require('path');
 
 const {
@@ -7,16 +8,19 @@ const {
     countLines
 } = require('../src/textAnalyzer');
 
-const filePath = path.join(__dirname, '../data/sample-text.txt');
+const file = path.join(__dirname, 'temp-text.txt');
 
-test('counts the words in a text file', () => {
-    expect(countWords(filePath)).toBeGreaterThanOrEqual(0);
+beforeAll(() => fs.writeFileSync(file, 'Cat elephant\nDog'));
+afterAll(() => fs.unlinkSync(file));
+
+test('counts words', () => {
+    expect(countWords(file)).toBe(3);
 });
 
-test('finds the longest word', () => {
-    expect(typeof findLongestWord(filePath)).toBe('string');
+test('finds longest word', () => {
+    expect(findLongestWord(file)).toBe('elephant');
 });
 
-test('counts the number of lines', () => {
-    expect(countLines(filePath)).toBeGreaterThanOrEqual(0);
+test('counts lines', () => {
+    expect(countLines(file)).toBe(2);
 });
