@@ -1,31 +1,43 @@
-
 const fs = require('fs');
 
-function countWords(filePath) {
-    const text = fs.readFileSync(filePath, 'utf8');
-    const words = text.match(/\b[\w']+\b/g) || [];
-    return words.length;
+function countWords(text) {
+    if (!text || text.trim() === '') {
+        return 0;
+    }
+    return text.trim().split(' ').length;
 }
 
-function findLongestWord(filePath) {
-    const text = fs.readFileSync(filePath, 'utf8');
-    const words = text.match(/\b[\w']+\b/g) || [];
+function findLongestWord(text) {
+    const words = text.split(' ');
+    let longest = words[0];
 
-    let longest = '';
-
-    for (let word of words) {
-        if (word.length > longest.length) {
-            longest = word;
+    for (let i = 0; i < words.length; i++) {
+        if (words[i].length > longest.length) {
+            longest = words[i];
         }
     }
 
     return longest;
 }
 
-function countLines(filePath) {
-    const text = fs.readFileSync(filePath, 'utf8').trimEnd();
-    return text ? text.split(/\r?\n/).length : 0;
+function countLines(text) {
+    const lines = text.split('\n');
+    return lines.length;
 }
 
-module.exports = { countWords, findLongestWord, countLines };
+const quotes = fs.readFileSync('./data/quotes.txt', 'utf8');
+const sample = fs.readFileSync('./data/sample-text.txt', 'utf8');
 
+console.log(countWords(quotes));
+console.log(findLongestWord(quotes));
+console.log(countLines(quotes));
+
+console.log(countWords(sample));
+console.log(findLongestWord(sample));
+console.log(countLines(sample));
+
+module.exports = {
+    countWords,
+    findLongestWord,
+    countLines
+};
